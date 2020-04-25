@@ -1,6 +1,7 @@
 /*jslint  esversion: 6 */
 
 var express = require('express');
+var bcrypt = require('bcryptjs');
 
 var app = express();
 
@@ -42,7 +43,7 @@ app.post('/', (request, response) => {
 
         nombre: body.nombre,
         email: body.email,
-        password: body.password,
+        password: bcrypt.hashSync(body.password, 10),
         img: body.img,
         role: body.role
 
@@ -51,7 +52,7 @@ app.post('/', (request, response) => {
     usuario.save((err, usuarioGuardado) => {
 
         if (err) {
-            return response.status(500).json({
+            return response.status(400).json({
                 ok: false,
                 mensaje: 'Error al crear usuario',
                 errors: err
