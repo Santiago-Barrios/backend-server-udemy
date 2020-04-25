@@ -121,5 +121,38 @@ app.post('/', (request, response) => {
 
 });
 
+//===============================================================================
+// Borrar un usuario por el id
+//===============================================================================
+app.delete('/:id', (request, response) => {
+
+    var id = request.params.id;
+
+    Usuario.findByIdAndRemove(id, (err, usuarioDelete) => {
+
+        if (err) {
+            return response.status(500).json({
+                ok: false,
+                mensaje: 'Error al borrar usuario',
+                errors: err
+            });
+        }
+
+        if (!usuarioDelete) {
+            return response.status(400).json({
+                ok: false,
+                mensaje: 'No existe un usuario con ese ID',
+                errors: { message: 'El usuario ha sido borrado o el ID no existe' },
+            });
+        }
+
+        response.status(200).json({
+            ok: true,
+            usuario: usuarioDelete,
+        });
+    });
+
+
+});
 
 module.exports = app;
