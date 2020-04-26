@@ -4,7 +4,7 @@ var express = require('express');
 var bcrypt = require('bcryptjs');
 var jwt = require('jsonwebtoken');
 
-var SEED = require('../config/config').SEED;
+var mdAutebtificacion = require('../middlewares/autentificacion');
 
 var app = express();
 
@@ -36,34 +36,11 @@ app.get('/', (request, response, next) => {
 
 });
 
-//==================================================================
-// Verificar token
-//==================================================================
-app.use('/', (request, response, next) => {
-
-    var token = request.query.token;
-
-    jwt.verify(token, SEED, (err, decoded) => {
-
-        if (err) {
-            return response.status(401).json({
-                ok: false,
-                mensaje: 'Token incorrecto',
-                errors: err
-            });
-        }
-
-        next();
-
-    });
-
-});
-
 
 //===============================================================================
 // Actualizar Usuario
 //===============================================================================
-app.put('/:id', (request, response) => {
+app.put('/:id', mdAutebtificacion.verificaToken, (request, response) => {
 
     var id = request.params.id;
     var body = request.body;
@@ -118,7 +95,7 @@ app.put('/:id', (request, response) => {
 //===============================================================================
 // Crear un nuevo usuario 
 //===============================================================================
-app.post('/', (request, response) => {
+app.post('/', mdAutebtificacion.verificaToken, (request, response) => {
 
     var body = request.body;
     var usuario = new Usuario({
@@ -143,6 +120,7 @@ app.post('/', (request, response) => {
         response.status(201).json({
             ok: true,
             usuario: usuarioGuardado,
+            usuariotoken: request.usuario,
         });
     });
 
@@ -151,7 +129,7 @@ app.post('/', (request, response) => {
 //===============================================================================
 // Borrar un usuario por el id
 //===============================================================================
-app.delete('/:id', (request, response) => {
+app.delete('/:id', mdAutebtificacion.verificaToken, (request, response) => {
 
     var id = request.params.id;
 
