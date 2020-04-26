@@ -2,6 +2,9 @@
 
 var express = require('express');
 var bcrypt = require('bcryptjs');
+var jwt = require('jsonwebtoken');
+
+var SEED = require('../config/config').SEED;
 
 var app = express();
 
@@ -32,6 +35,30 @@ app.get('/', (request, response, next) => {
             });
 
 });
+
+//==================================================================
+// Verificar token
+//==================================================================
+app.use('/', (request, response, next) => {
+
+    var token = request.query.token;
+
+    jwt.verify(token, SEED, (err, decoded) => {
+
+        if (err) {
+            return response.status(401).json({
+                ok: false,
+                mensaje: 'Token incorrecto',
+                errors: err
+            });
+        }
+
+        next();
+
+    });
+
+});
+
 
 //===============================================================================
 // Actualizar Usuario
