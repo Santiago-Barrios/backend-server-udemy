@@ -18,21 +18,25 @@ var Medico = require('../models/medico');
 app.get('/', (request, response, next) => {
 
 
-    Medico.find({}, (err, medicos) => {
+    Medico.find({})
+        .populate('usuario', 'nombre email')
+        .populate('hospital')
+        .exec(
+            (err, medicos) => {
 
-        if (err) {
-            return response.status(500).json({
-                ok: false,
-                mensaje: 'Error cargando medicos',
-                errors: err
+                if (err) {
+                    return response.status(500).json({
+                        ok: false,
+                        mensaje: 'Error cargando medicos',
+                        errors: err
+                    });
+                }
+                response.status(200).json({
+                    ok: true,
+                    medicos: medicos,
+                });
+
             });
-        }
-        response.status(200).json({
-            ok: true,
-            medicos: medicos,
-        });
-
-    });
 
 });
 

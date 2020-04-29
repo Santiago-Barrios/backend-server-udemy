@@ -18,21 +18,24 @@ var Hospital = require('../models/hospital');
 app.get('/', (request, response, next) => {
 
 
-    Hospital.find({}, (err, hospitales) => {
+    Hospital.find({})
+        .populate('usuario', 'nombre email')
+        .exec(
+            (err, hospitales) => {
 
-        if (err) {
-            return response.status(500).json({
-                ok: false,
-                mensaje: 'Error cargando hodpitales',
-                errors: err
+                if (err) {
+                    return response.status(500).json({
+                        ok: false,
+                        mensaje: 'Error cargando hodpitales',
+                        errors: err
+                    });
+                }
+                response.status(200).json({
+                    ok: true,
+                    hospitales: hospitales,
+                });
+
             });
-        }
-        response.status(200).json({
-            ok: true,
-            hospitales: hospitales,
-        });
-
-    });
 
 });
 
