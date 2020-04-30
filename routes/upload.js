@@ -10,7 +10,25 @@ var app = express();
 app.use(fileUpload());
 
 
-app.put('/', (request, response, next) => {
+app.put('/:tipo/:id', (request, response, next) => {
+
+    var tipo = request.params.tipo;
+    var id = request.params.id;
+
+    // tipos de colecciones
+    var tiposValidos = ['hospitales', 'medicos', 'usuarios'];
+
+    if (tiposValidos.indexOf(tipo) < 0) {
+
+        return response.status(400).json({
+
+            ok: false,
+            mensaje: 'Tipo de colección no es válido ',
+            errors: { message: 'Los tipo de colección válidos son ' + tiposValidos.join(', ') },
+
+        });
+
+    }
 
     if (!request.files) {
 
@@ -43,12 +61,37 @@ app.put('/', (request, response, next) => {
 
     }
 
-    response.status(200).json({
-        ok: true,
-        mensaje: 'Petición realizada correctamente',
-        nombre: nombreCortado,
-        extensionArchivo: extensionArchivo,
+    // Nombre de un archivo personalizado
+    var nombreArchivo = `${ id }-${ new Date().getMilliseconds() }.${ extensionArchivo }`;
+
+
+    // Mover el archivo del temporal a un path en expecifico 
+    var path = `./uploads/${tipo}/${nombreArchivo}`;
+
+    archivo.mv(path, err => {
+
+        if (err) {
+
+            return response.status(500).json({
+
+                ok: false,
+                mensaje: 'error al mover archivo',
+                errors: err,
+
+            });
+
+        }
+        response.status(200).json({
+            ok: true,
+            mensaje: 'Petición realizada correctamente, archivo movido',
+            nombre: nombreCortado,
+            extensionArchivo: extensionArchivo,
+            path: path,
+            nombrear: nombreArchivo
+        });
+
     });
+
 });
 
 module.exports = app;
