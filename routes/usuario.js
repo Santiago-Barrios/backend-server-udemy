@@ -106,7 +106,7 @@ app.put('/:id', mdAutebtificacion.verificaToken, (request, response) => {
 //===============================================================================
 // Crear un nuevo usuario 
 //===============================================================================
-app.post('/', mdAutebtificacion.verificaToken, (request, response) => {
+app.post('/', (request, response) => {
 
     var body = request.body;
     var usuario = new Usuario({
