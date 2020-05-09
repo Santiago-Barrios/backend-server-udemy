@@ -5,9 +5,9 @@
 var express = require('express');
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
+const cors = require('cors');
 
 // Inicializar variable 
-
 var app = express();
 
 
@@ -63,6 +63,8 @@ app.use('/busqueda', busquedaRoutes);
 app.use('/upload', uploadRoutes);
 app.use('/img', imagenesRoutes);
 app.use('/', appRoutes);
+
+app.use(cors());
 
 //escuchar petición
 app.listen(3000, () => {

@@ -16,7 +16,7 @@ var Hospital = require('../models/hospital');
 app.use(fileUpload());
 
 
-app.put('/:tipo/:id', (request, response, next) => {
+app.post('/:tipo/:id', (request, response, next) => {
 
     var tipo = request.params.tipo;
     var id = request.params.id;
