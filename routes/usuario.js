@@ -51,7 +51,7 @@ app.get('/', (request, response, next) => {
 //===============================================================================
 // Actualizar Usuario
 //===============================================================================
-app.put('/:id', [mdAutebtificacion.verificaToken, mdAutebtificacion.verificaADMIN_ROLE], (request, response) => {
+app.put('/:id', [mdAutebtificacion.verificaToken, mdAutebtificacion.verificaADMIN_o_MismoUsuario], (request, response) => {
 
     var id = request.params.id;
     var body = request.body;
