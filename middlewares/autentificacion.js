@@ -32,3 +32,25 @@ exports.verificaToken = function(request, response, next) {
     });
 
 };
+
+//==================================================================
+// Verificar ADMIN
+//==================================================================
+exports.verificaADMIN_ROLE = function(request, response, next) {
+
+    var usuario = request.usuario;
+
+    if (usuario.role === 'ADMIN_ROLE') {
+        next();
+        return;
+    } else {
+        return response.status(401).json({
+            ok: false,
+            mensaje: 'Token incorrecto - No es administrador',
+            errors: { message: 'no es administrador, no puede hacer eso' }
+        });
+    }
+
+
+
+};
