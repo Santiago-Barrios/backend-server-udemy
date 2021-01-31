@@ -17,7 +17,7 @@ const client = new OAuth2Client(CLIENT_ID);
 var mdautenticacion = require('../middlewares/autentificacion');
 
 //===============================================================================
-// comentario
+// Renovar token
 //===============================================================================
 
 
